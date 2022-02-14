@@ -1,5 +1,5 @@
-import React, {Components} from 'react'
-class App extends Components {
+import React, {Component} from 'react'
+class App extends Component {
   render () {
     return (
       <div>
