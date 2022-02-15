@@ -1,22 +1,33 @@
-import React, {Component, Fragment} from "react";
+import React, { Component, Fragment } from 'react'
+import './demo01.css'
+
 class Demo01 extends Component {
-  constructor (props) {
-    super(props)
+  constructor (prop) {
+    super(prop)
     this.state = {
       inputVal: '',
-      list: ['一', '二']
+      list: ['罗', '飞', '大', '魔', '王']
     }
   }
   render () {
     return (
       <Fragment>
-        <div>
-          <input value={this.state.inputVal} onChange={this.changeInput.bind(this)}/>
-          <button onClick={this.addList.bind(this)}>增加</button>
+        {/* 注释 */}
+        <div  onKeyUp={this.addVal.bind(this)}>
+          <label htmlFor='Luofei'>罗飞</label>
+          <input id='Luofei' className='input' onChange={this.changeVal.bind(this)} value={this.state.inputVal}></input>
+          <button onClick={this.addVal.bind(this)}>add</button>
           <ul>
             {
-              this.state.list.map(item => {
-                return <li key={item}>{item}</li>
+              this.state.list.map((item, index) => {
+                return (
+                  <li
+                    key={item + index}
+                    onClick={this.delItem.bind(this, item)}
+                    dangerouslySetInnerHTML={{ __html: item }}
+                    >
+                  </li>
+                )
               })
             }
           </ul>
@@ -24,18 +35,30 @@ class Demo01 extends Component {
       </Fragment>
     )
   }
-  changeInput (e) {
-    console.log(this.state);
+  changeVal (e) {
     this.setState({
       inputVal: e.target.value
     })
   }
-  addList () {
+  addVal (e) {
+    if ((e.keyCode == 13 || e._reactName === 'onClick') && this.state.inputVal !== '') {
+      this.setState({
+        list: [...this.state.list, this.state.inputVal],
+        inputVal: ''
+      })
+    }
+  }
+  delItem (e) {
+    console.log(e);
+    let arr
+    if (this.state.list.length > 0) {
+      arr = this.state.list.filter(item => {
+        return item != e
+      })
+    }
     this.setState({
-      list: [...this.state.list, this.state.inputVal],
-      inputVal: ''
+      list: arr
     })
-    console.log(this.state.list);
   }
 }
 
