@@ -1,24 +1,37 @@
-import React, { Component, Fragment } from 'react'
-import './demo01.css'
+import React, {Component, Fragment} from 'react'
+import Demo01Item from './demo01_item'
 
 class Demo01 extends Component {
   constructor (props) {
     super(props)
     this.state = {
       inputVal: '',
-      list: ['罗']
+      list: ['一', '二']
     }
   }
   render () {
     return (
       <Fragment>
-        <div onKeyUp={this.enterAdd.bind(this)}>
-          <input className='input' value={this.state.inputVal} onChange={this.getInput.bind(this)}></input>
-          <button onClick={this.clickBtn.bind(this)}>add</button>
+        <div onKeyUp={this.keyup.bind(this)}>
+          <input
+            ref={(input) => this.input = input}
+            value={this.state.inputVal}
+            onChange={this.changeVal.bind(this)}></input>
+          <button>Add</button>
           <ul>
             {
               this.state.list.map((item, index) => {
-                return <li key={item} onClick={this.delItem.bind(this, index)}>{item}</li>
+                {/**
+                  return <li key={item}>{item}</li>
+                */}
+                return (
+                  <Demo01Item
+                    key={item}
+                    content={item}
+                    index={index}
+                    delItem={this.delItem.bind(this)}
+                    ></Demo01Item>
+                )
               })
             }
           </ul>
@@ -26,16 +39,21 @@ class Demo01 extends Component {
       </Fragment>
     )
   }
-  getInput (e) {
+  changeVal () {
+    console.log(this.input);
     this.setState({
-      inputVal: e.target.value
+      inputVal: this.input.value
     })
   }
-  clickBtn (e) {
-    this.setState({
-      list: [...this.state.list, this.state.inputVal],
-      inputVal: ''
-    })
+  keyup (e) {
+    if (e.keyCode === 13) {
+      this.setState({
+        list: [...this.state.list, this.state.inputVal],
+        inputVal: '',
+      }, () => {
+        console.log(this.state.list.length);
+      })
+    }
   }
   delItem (i) {
     this.state.list.splice(i, 1)
@@ -43,11 +61,7 @@ class Demo01 extends Component {
       list: this.state.list
     })
   }
-  enterAdd (e) {
-    if (e.keyCode == 13 && this.state.inputVal) {
-      this.clickBtn()
-    }
-  }
+
 }
 
 export default Demo01
